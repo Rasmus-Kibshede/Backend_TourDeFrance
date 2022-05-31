@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Year;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +31,10 @@ public class RiderService {
     return rider.isPresent() ? rider.get() : null;
   }
 
+  public List<Rider> findAllRidersOrderByTime() {
+    return riderRepository.findAllOrderByRider_time();
+  }
+
 
   public void deleteRiderById(Long id) {
     riderRepository.deleteById(id);
@@ -53,26 +56,19 @@ public class RiderService {
     for (Rider rider : riders) {
 
       //Mountain shirt
-      if (mountainShirt == null || rider.getRider_mountain_point() > mountainShirt.getRider_mountain_point()) {
-        mountainShirt = rider;
-      }
+      mountainShirt = shirtSortMountain(rider, mountainShirt);
 
       //Sprint shirt aka green shirt
-      if (greenShirt == null || rider.getRider_sprint_point() > greenShirt.getRider_sprint_point()) {
-        greenShirt = rider;
-      }
+      greenShirt = shirtSortGreen(rider, greenShirt);
+
 
       //Yellow shirt
-      if (yellowShirt == null ||rider.getRider_time() < yellowShirt.getRider_time()) {
-        yellowShirt = rider;
-      }
+      yellowShirt = shirtSortTime(rider, yellowShirt);
 
-      int riderAge = Year.now().getValue() - Integer.parseInt(rider.getRider_birthday().toString().split("-")[0]);
+      int riderAge = calculateRiderAge(rider);
 
       //White shirt
-      if (riderAge < 26 && (whiteShirt == null || rider.getRider_time() < whiteShirt.getRider_time())) {
-        whiteShirt = rider;
-      }
+      whiteShirt = shirtSortWhite(riderAge, rider, whiteShirt);
     }
 
     riderHashMap.put("mountainShirt", mountainShirt);
@@ -82,4 +78,38 @@ public class RiderService {
 
     return riderHashMap;
   }
+
+  public int calculateRiderAge(Rider rider){
+    return Year.now().getValue() - Integer.parseInt(rider.getRider_birthday().toString().split("-")[0]);
+  }
+
+  public Rider shirtSortWhite(int riderAge, Rider rider, Rider shirt) {
+    if (riderAge < 26 && (shirt == null || rider.getRider_time() < shirt.getRider_time())) {
+      return rider;
+    }
+    return shirt;
+  }
+
+  public Rider shirtSortGreen(Rider rider, Rider shirt) {
+    if (shirt == null || rider.getRider_sprint_point() > shirt.getRider_sprint_point()) {
+      return rider;
+    }
+    return shirt;
+  }
+
+  public Rider shirtSortMountain(Rider rider, Rider shirt) {
+    if (shirt == null || rider.getRider_mountain_point() > shirt.getRider_mountain_point()) {
+      return rider;
+    }
+    return shirt;
+  }
+
+  public Rider shirtSortTime(Rider rider, Rider shirt) {
+    if (shirt == null || rider.getRider_time() < shirt.getRider_time()) {
+      return rider;
+    }
+    return shirt;
+  }
+
+
 }

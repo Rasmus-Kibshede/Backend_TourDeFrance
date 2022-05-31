@@ -13,6 +13,9 @@ public interface RiderRepository extends JpaRepository<Rider, Long> {
   @Query("SELECT r FROM Rider r WHERE r.team.team_id = ?1")
   List<Rider> findAllRiderByTeamTeam_id(Long id);
 
+  @Query("SELECT r FROM Rider r ORDER BY r.rider_time")
+  List<Rider> findAllOrderByRider_time();
+
   /*@Query("SELECT r FROM Rider r WHERE r.rider_mountain_point = (SELECT MAX(rider_mountain_point) from Rider)")
   Rider findRiderWithMaxMountainPoints();
 

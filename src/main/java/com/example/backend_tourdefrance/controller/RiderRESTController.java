@@ -24,6 +24,12 @@ public class RiderRESTController {
     return riders;
   }
 
+  @GetMapping("/sort/riders")
+  public List<Rider> getAllRidersTimeOrder() {
+    List<Rider> riders = riderService.findAllRidersOrderByTime();
+    return riders;
+  }
+
   @GetMapping("/shirts/riders")
   public HashMap<String, Rider> getShirtsRiders() {
     return riderService.findBestRiders();
