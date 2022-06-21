@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RiderServiceTest {
 
-  private RiderService riderService = new RiderService();
+ /* private RiderService riderService = new RiderService();
 
   Rider shirt = null;
   Rider shirtNotNull = null;
@@ -67,7 +67,7 @@ class RiderServiceTest {
 
   //TODO Test calculateRiderAge and shirtSortWhite
 
-
+*/
 /* @Test
   public void calculateRiderAge() {
 
